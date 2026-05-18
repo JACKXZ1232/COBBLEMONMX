@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CobblemonMX — Centro de Descarga</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:    #e8192c;
+      --red2:   #ff4757;
+      --dark:   #0a0a0f;
+      --darker: #050508;
+      --surface:#111118;
+      --border: rgba(232,25,44,0.25);
+      --glow:   rgba(232,25,44,0.6);
+      --text:   #f0f0f5;
+      --muted:  #888899;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--darker);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,25,44,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,25,44,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── RADIAL GLOW ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(232,25,44,.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      background: rgba(5,5,8,.7);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+    }
+
+    .logo-wrap img {
+      height: 44px;
+      filter: drop-shadow(0 0 8px var(--glow));
+    }
+
+    .logo-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      background: linear-gradient(135deg, #fff 30%, var(--red2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-ip {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: .35rem .85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .25s;
+      user-select: all;
+    }
+    .header-ip:hover { color: var(--red2); border-color: var(--red2); box-shadow: 0 0 10px rgba(232,25,44,.25); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 5rem;
+      gap: 1.5rem;
+    }
+
+    .hero-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red2);
+      border: 1px solid var(--border);
+      padding: .3rem 1rem;
+      border-radius: 2px;
+      animation: fadeDown .6s ease both;
+    }
+
+    .hero-logo {
+      width: 160px;
+      filter: drop-shadow(0 0 30px var(--glow)) drop-shadow(0 0 60px rgba(232,25,44,.3));
+      animation: fadeDown .7s ease .1s both, float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: .04em;
+      animation: fadeDown .7s ease .2s both;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--red) 0%, var(--red2) 60%, #ff9f43 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      max-width: 500px;
+      animation: fadeDown .7s ease .3s both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity:0; transform:translateY(-18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      animation: fadeUp .8s ease .4s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .card:hover {
+      border-color: rgba(232,25,44,.55);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(232,25,44,.15);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: #fff;
+    }
+
+    .card-desc {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin-top: auto;
+      padding: .75rem 1.4rem;
+      border-radius: 5px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all .25s;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(232,25,44,.35);
+    }
+    .btn-primary:hover {
+      background: var(--red2);
+      box-shadow: 0 0 28px rgba(232,25,44,.6);
+      transform: scale(1.03);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--red2);
+      color: var(--red2);
+      box-shadow: 0 0 14px rgba(232,25,44,.2);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      position: relative;
+      z-index: 5;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .divider::before, .divider::after {
+      content:'';
+      flex:1;
+      height:1px;
+      background: var(--border);
+    }
+    .divider span {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .78rem;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── STEPS ── */
+    .steps {
+      position: relative;
+      z-index: 5;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      animation: fadeUp .8s ease .5s both;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.3rem 1.5rem;
+      transition: border-color .25s;
+    }
+    .step:hover { border-color: rgba(232,25,44,.4); }
+
+    .step-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--red);
+      min-width: 2rem;
+      line-height: 1.2;
+    }
+
+    .step-body { display:flex; flex-direction:column; gap:.3rem; }
+    .step-title { font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:.04em; }
+    .step-desc  { font-size:.85rem; color:var(--muted); line-height:1.6; }
+
+    /* ── IP BANNER ── */
+    .ip-banner {
+      position: relative;
+      z-index: 5;
+      max-width: 700px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+
+    .ip-box {
+      background: linear-gradient(135deg, rgba(232,25,44,.08), rgba(232,25,44,.03));
+      border: 1px solid rgba(232,25,44,.35);
+      border-radius: 8px;
+      padding: 1.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ip-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .8rem;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+
+    .ip-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .05em;
+    }
+
+    .copy-btn {
+      background: rgba(232,25,44,.15);
+      border: 1px solid rgba(232,25,44,.35);
+      color: var(--red2);
+      padding: .6rem 1.3rem;
+      border-radius: 5px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      letter-spacing: .1em;
+      cursor: pointer;
+      transition: all .25s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: rgba(232,25,44,.3); box-shadow: 0 0 14px rgba(232,25,44,.3); }
+    .copy-btn.copied { color: #2ed573; border-color: #2ed573; background: rgba(46,213,115,.1); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    footer strong { color: var(--red2); }
+
+    /* ── SCANLINE OVERLAY ── */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.03) 2px,
+        rgba(0,0,0,.03) 4px
+      );
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header { padding: 1rem 1.2rem; }
+      .hero { padding: 5rem 1.2rem 3rem; }
+      .cards, .steps, .ip-banner { padding-left: 1.2rem; padding-right: 1.2rem; }
+      .ip-box { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="scanlines"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <img src="https://cdn.discordapp.com/attachments/1499182953891102770/1499764912291971112/logoc.png?ex=6a0c65eb&is=6a0b146b&hm=82ea44d52f881f6d8d14925cc6ddb1fca27f56cc2abcbf34e6507952764e394a&" alt="CobblemonMX Logo"/>
+    <span class="logo-text">CobblemonMX</span>
+  </div>
+  <span class="header-ip" title="Copia la IP">cobblemonmx.com</span>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">⬡ Modpack Oficial</div>
+  <img class="hero-logo"
+    src="https://cdn.discordapp.com/attachments/1499182953891102770/1499764912291971112/logoc.png?ex=6a0c65eb&is=6a0b146b&hm=82ea44d52f881f6d8d14925cc6ddb1fca27f56cc2abcbf34e6507952764e394a&"
+    alt="CobblemonMX"/>
+  <h1 class="hero-title">Centro de <span>Descarga</span></h1>
+  <p class="hero-sub">Instala el modpack oficial y únete a la aventura Pokémon en Minecraft</p>
+</section>
+
+<!-- CARDS -->
+<div class="cards">
+
+  <div class="card">
+    <div class="card-icon">📦</div>
+    <div class="card-title">Modpack — CurseForge</div>
+    <p class="card-desc">Descarga e instala el modpack completo desde CurseForge App. Opción recomendada: actualizaciones automáticas y fácil configuración.</p>
+    <a class="btn btn-primary" href="#" target="_blank">
+      ⬇ Descargar en CurseForge
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">🗜️</div>
+    <div class="card-title">Modpack — Modrinth</div>
+    <p class="card-desc">Alternativa rápida desde Modrinth. Compatible con el launcher Modrinth App y PrismLauncher para una instalación limpia.</p>
+    <a class="btn btn-primary" href="#" target="_blank">
+      ⬇ Descargar en Modrinth
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📋</div>
+    <div class="card-title">Guía de Instalación</div>
+    <p class="card-desc">¿Primera vez? Sigue nuestra guía paso a paso para tener todo listo en minutos, sin importar tu launcher.</p>
+    <a class="btn btn-outline" href="#pasos">
+      Ver pasos →
+    </a>
+  </div>
+
+</div>
+
+<!-- DIVIDER -->
+<div class="divider"><span>Cómo conectarte</span></div>
+
+<!-- STEPS -->
+<div class="steps" id="pasos">
+
+  <div class="step">
+    <div class="step-num">01</div>
+    <div class="step-body">
+      <div class="step-title">Descarga el launcher</div>
+      <p class="step-desc">Instala <strong>CurseForge App</strong> o <strong>Modrinth App</strong> en tu computadora. Ambos son gratuitos y fáciles de usar.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">02</div>
+    <div class="step-body">
+      <div class="step-title">Instala el modpack</div>
+      <p class="step-desc">Haz clic en el botón de descarga de arriba. El launcher importará el modpack de forma automática con todos los mods necesarios.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">03</div>
+    <div class="step-body">
+      <div class="step-title">Lanza Minecraft</div>
+      <p class="step-desc">Abre el perfil <strong>CobblemonMX</strong> desde tu launcher y espera a que carguen todos los mods. La primera vez puede tardar un poco.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">04</div>
+    <div class="step-body">
+      <div class="step-title">Conéctate al servidor</div>
+      <p class="step-desc">En el menú multijugador agrega el servidor con la IP <strong>cobblemonmx.com</strong> y ¡a jugar!</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- IP BANNER -->
+<div class="ip-banner">
+  <div class="ip-box">
+    <div>
+      <div class="ip-label">IP del Servidor</div>
+      <div class="ip-value">cobblemonmx.com</div>
+    </div>
+    <button class="copy-btn" id="copyBtn" onclick="copyIP()">📋 Copiar IP</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>CobblemonMX</strong> &nbsp;·&nbsp; cobblemonmx.com &nbsp;·&nbsp; No oficial de Mojang ni Pokémon
+</footer>
+
+<script>
+  function copyIP() {
+    navigator.clipboard.writeText('cobblemonmx.com').then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✔ Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar IP';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
